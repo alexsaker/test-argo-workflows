@@ -1,0 +1,39 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: workflow-template-inner-steps
+spec:
+  templates:
+    - name: whalesay-template
+      inputs:
+        parameters:
+          - name: message
+      container:
+        image: docker/whalesay
+        command: [cowsay]
+        args: ["{{inputs.parameters.message}}"]
+    - name: inner-steps
+      steps:
+        - - name: inner-hello1
+            templateRef:
+              name: workflow-whalesay-template
+              template: whalesay-template
+            arguments:
+              parameters:
+                - name: message
+                  value: "inner-hello1"
+        - - name: inner-hello2a
+            templateRef:
+              name: workflow-whalesay-template
+              template: whalesay-template
+            arguments:
+              parameters:
+                - name: message
+                  value: "inner-hello2a"
+          - name: inner-hello2b
+            template: whalesay-template
+            arguments:
+              parameters:
+                - name: message
+                  value: "inner-hello2b"

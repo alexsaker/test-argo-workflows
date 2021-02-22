@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: workflow-inner-steps-from-template-
+spec:
+  entrypoint: whalesay
+  templates:
+  - name: whalesay
+    dag:
+      tasks:
+        - name: call-whalesay-template
+          dependencies: [call-inner-steps]
+          templateRef:
+            name: workflow-template-inner-steps
+            template: whalesay-template
+          arguments:
+            parameters:
+            - name: message
+              value: "hello world"
+        - name: call-inner-steps
+          templateRef:
+            name: workflow-template-inner-steps
+            template: inner-steps
+          dependencies: []
+        - name: call-inner-steps-final
+          templateRef:
+            name: workflow-template-inner-steps
+            template: inner-steps
+          dependencies: [call-whalesay-template]

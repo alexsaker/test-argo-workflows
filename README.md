@@ -2,6 +2,8 @@
 
 https://argoproj.github.io/argo-workflows/
 
+---
+
 ## Installation
 
 ### CLI installation
@@ -61,6 +63,8 @@ Alternately, you can use your browser or the Minio SDK to access the server - ht
 
 ```
 
+---
+
 ## Running Argo
 
 ### Submit a workflow
@@ -73,4 +77,18 @@ argo submit workflows/coin-flip.yaml
 
 ```bash
 argo watch @latest
+```
+
+### Creating a workflow template and using template in a workflow
+
+The template needs to be registered in kubernetes.
+
+```bash
+argo template create workflow-templates/workflow-template-inner-steps.yaml
+```
+
+It can then be used in a workflow and the workflow submitted.
+
+```bash
+argo submit workflows/inner-steps-from-template.yaml
 ```
